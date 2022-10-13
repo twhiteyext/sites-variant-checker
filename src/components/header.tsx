@@ -30,21 +30,12 @@ const Header = () => {
     <>
       <div className="centered-container">
         <nav className="py-6 flex items-center justify-between">
+          <div className="text-2xl font-semibold">Instance Variant Checker</div>
           <img
             src="https://cdn.fs.brandfolder.com/cache=expiry:604800/deY3VGFpSjC761Abjbfc"
-            width="50"
-            height="50"
+            width="40"
+            height="40"
           ></img>
-          <div className="text-2xl font-semibold">Turtlehead Tacos</div>
-          <div className="flex gap-x-10 text-lg font-semibold">{linkDoms}</div>
-          <div className="space-x-5">
-            <Cta buttonText="Order Pickup" url="#" style="primary-cta"></Cta>
-            <Cta
-              buttonText="Order Delivery"
-              url="#"
-              style="secondary-cta"
-            ></Cta>
-          </div>
         </nav>
       </div>
     </>

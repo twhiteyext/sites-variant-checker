@@ -17,3 +17,43 @@
 .secondary-cta {
   @apply bg-sky-700 hover:bg-sky-800;
 }
+
+.column {
+  float: left;
+  width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.instanceMatches {
+  background-color: green;
+  color: white;
+  font-weight: 500;
+  padding: 10px 10px 10px 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.instanceDoesNotMatch {
+  background-color: red;
+  color: white;
+  font-weight: 500;
+  padding: 10px 10px 10px 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.pathDiff {
+  background-color: rgb(204, 204, 204);
+  border-radius: 10px;
+  padding: 10px 10px 10px 10px;
+}
+
+.boldFont {
+  font-weight: 600;
+}
