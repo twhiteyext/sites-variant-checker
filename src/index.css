@@ -57,3 +57,23 @@
 .boldFont {
   font-weight: 600;
 }
+
+.child-isSame-true {
+  background-color: green;
+  border-radius: 10px;
+  padding: 10px 10px 10px 10px;
+  margin-top: 10px;
+  display: flex;
+}
+
+.child-isSame-false {
+  background-color: rgba(255, 23, 23, 0.5);
+  border-radius: 10px;
+  padding: 10px 10px 10px 10px;
+  margin-top: 10px;
+  display: flex;
+}
+
+.child-inside {
+  margin: 0px 25px;
+}

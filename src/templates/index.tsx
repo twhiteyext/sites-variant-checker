@@ -17,7 +17,7 @@
    */
   export const config: TemplateConfig = {
     stream: {
-      $id: "instancediff-stream",
+      $id: "index-stream",
       // Specifies the exact data that each generated document will contain. This data is passed in
       // directly as props to the default exported function.
       fields: [
@@ -25,15 +25,12 @@
         "uid",
         "meta",
         "name",
-        "c_instance1",
-        "c_instance2",
-        "c_doesContentMatch",
-        "c_instance1PathDiffs",
-        "c_instance2PathDiffs"
+        "c_lastRunTimestamp",
+        "c_children",
       ],
       // Defines the scope of entities that qualify for this stream.
       filter: {
-        entityTypes: ["ce_instanceDiff"],
+        entityTypes: ["ce_index"],
       },
       // The entity language profiles that documents will be generated for.
       localization: {
@@ -50,7 +47,7 @@
    * take on the form: featureName/entityId
    */
   export const getPath: GetPath<TemplateProps> = ({ document }) => {
-    return `${document.id.toString()}`;
+    return 'index';
   };
   
   /**
@@ -99,51 +96,36 @@
     const {
       _site,
       name,
-      c_instance1,
-      c_instance2,
-      c_instance1PathDiffs,
-      c_instance2PathDiffs,
-      c_doesContentMatch,
+      c_lastRunTimestamp,
+      c_children
     } = document;
 
-    let formatDiff = (instance: String, pathDiffs: String) => (
-        <div>
-            <div className="boldFont">
-                {instance}
-            </div>
-            {pathDiffs.length > 0 ? (
-                <div>
-                The following paths exist in this instance but not the other:
-                    <div className="pathDiff">
-                        {pathDiffs}
-                    </div>
-                </div>
-            ): null }
-        </div>
-    )
+    let childComponents = []
+    for (var i = 0; i < c_children.length; i++) {
+      var child = c_children[i]
+      var parts = child.split(":")
+      childComponents.push({
+        deployId: parts[0],
+        id: parts[1],
+        timestamp: parts[2],
+        isSame: parts[3],
+      })
+    }
   
     return (
       <>
         <PageLayout _site={_site}>
             <div className="centered-container">
-                {c_doesContentMatch ? (
-                    <div className="instanceMatch">
-                        Content Matches
-                    </div>
-                ):(
-                    <div className="instanceDoesNotMatch">
-                        Content Does Not Match
-                    </div>
+              <div>
+                Last Run: {c_lastRunTimestamp}
+              </div>
+                {childComponents.map(child =>
+                  <div className={"child-isSame-"+child.isSame}>
+                    <a className="child-inside" style={{fontWeight: '700'}} href={"/instancediff/"+child.id}> {child.deployId} </a>
+                    <div className="child-inside"> Created: {child.timestamp} </div>
+                    <div className="child-inside"> IsSame: {child.isSame} </div>
+                  </div>
                 )}
-
-                <div className="row">
-                    <div className="column">
-                        {formatDiff(c_instance1, c_instance1PathDiffs)}
-                    </div>
-                    <div className="column">
-                        {formatDiff(c_instance2, c_instance2PathDiffs)}
-                    </div>
-                </div>
             </div>
         </PageLayout>
       </>
