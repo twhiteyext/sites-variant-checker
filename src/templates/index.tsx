@@ -78,6 +78,18 @@
       tags: [],
     };
   };
+
+  function convertUnixTime(unix: string) {
+    let a = new Date(parseInt(unix) * 1000),
+        year = a.getFullYear(),
+        months = ['January','February','March','April','May','June','July','August','September','October','November','December'],
+        month = months[a.getMonth()],
+        date = a.getDate(),
+        hour = a.getHours(),
+        min = a.getMinutes() < 10 ? '0' + a.getMinutes() : a.getMinutes(),
+        sec = a.getSeconds() < 10 ? '0' + a.getSeconds() : a.getSeconds();
+    return `${month} ${date}, ${year}, ${hour}:${min}:${sec}`;
+  }  
   
   /**
    * This is the main template. It can have any name as long as it's the default export.
@@ -105,25 +117,26 @@
       var child = c_children[i]
       var parts = child.split(":")
       childComponents.push({
-        deployId: parts[0],
-        id: parts[1],
-        timestamp: parts[2],
+        timestamp: convertUnixTime(parts[0]),
+        deployId: parts[1],
+        id: parts[2],
         isSame: parts[3],
       })
     }
+
+    var lastRun = convertUnixTime(c_lastRunTimestamp)
   
     return (
       <>
         <PageLayout _site={_site}>
             <div className="centered-container">
               <div>
-                Last Run: {c_lastRunTimestamp}
+                Last Run: {lastRun}
               </div>
                 {childComponents.map(child =>
                   <div className={"child-isSame-"+child.isSame}>
                     <a className="child-inside" style={{fontWeight: '700'}} href={"/instancediff/"+child.id}> {child.deployId} </a>
-                    <div className="child-inside"> Created: {child.timestamp} </div>
-                    <div className="child-inside"> IsSame: {child.isSame} </div>
+                    <div className="child-inside"> {child.timestamp} </div>
                   </div>
                 )}
             </div>

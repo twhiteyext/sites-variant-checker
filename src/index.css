@@ -77,3 +77,12 @@
 .child-inside {
   margin: 0px 25px;
 }
+
+.inline-row {
+  display: inline;
+  margin-right: 40px;
+}
+
+.bottom-margin {
+  margin-bottom: 20px
+}

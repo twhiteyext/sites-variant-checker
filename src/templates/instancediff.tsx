@@ -11,6 +11,18 @@
   import * as React from "react";
   import PageLayout from "../components/page-layout";
   import "../index.css";
+
+  function convertUnixTime(unix: string) {
+    let a = new Date(parseInt(unix) * 1000),
+        year = a.getFullYear(),
+        months = ['January','February','March','April','May','June','July','August','September','October','November','December'],
+        month = months[a.getMonth()],
+        date = a.getDate(),
+        hour = a.getHours(),
+        min = a.getMinutes() < 10 ? '0' + a.getMinutes() : a.getMinutes(),
+        sec = a.getSeconds() < 10 ? '0' + a.getSeconds() : a.getSeconds();
+    return `${month} ${date}, ${year}, ${hour}:${min}:${sec}`;
+  }  
   
   /**
    * Required when Knowledge Graph data is used for a template.
@@ -27,9 +39,20 @@
         "name",
         "c_instance1",
         "c_instance2",
+        "c_createdTimestamp",
+        "c_activities1",
+        "c_activities2",
+        "c_publishStatus1",
+        "c_publishStatus2",
+        "c_instance1streams",
+        "c_instance2streams",
         "c_doesContentMatch",
-        "c_instance1PathDiffs",
-        "c_instance2PathDiffs"
+        "c_pathsOnlyIn1",
+        "c_pathsOnlyIn2",
+        "c_diffContentPaths",
+        "c_diffContents1",
+        "c_diffContents2",
+        "c_isEqual",
       ],
       // Defines the scope of entities that qualify for this stream.
       filter: {
@@ -50,7 +73,7 @@
    * take on the form: featureName/entityId
    */
   export const getPath: GetPath<TemplateProps> = ({ document }) => {
-    return `${document.id.toString()}`;
+    return `instancediffs/${document.id.toString()}`;
   };
   
   /**
@@ -101,24 +124,67 @@
       name,
       c_instance1,
       c_instance2,
-      c_instance1PathDiffs,
-      c_instance2PathDiffs,
+      c_createdTimestamp,
+      c_activities1,
+      c_activities2,
+      c_publishStatus1,
+      c_publishStatus2,
+      c_instance1streams,
+      c_instance2streams,
       c_doesContentMatch,
+      c_pathsOnlyIn1,
+      c_pathsOnlyIn2,
+      c_diffContentPaths,
+      c_diffContents1,
+      c_diffContents2,
+      c_isEqual,
     } = document;
 
-    let formatDiff = (instance: String, pathDiffs: String) => (
+    let formatDiff = (instance: String, activities: String, publishStatus: String, streams: String[], pathsOnly: String[], diffContentPaths: String[], diffContents: String[]) => (
         <div>
             <div className="boldFont">
                 {instance}
             </div>
-            {pathDiffs.length > 0 ? (
-                <div>
+            <div>
+                Activities: {activities}
+            </div>
+            <div className="bottom-margin">
+                PublishStatus: {publishStatus}
+            </div>
+            <div className="bottom-margin">
+                Streams:
+                {streams.map(stream => 
+                    <div className="pathDiff">
+                        {stream}
+                    </div>
+                )}
+            </div>
+            {pathsOnly.length > 0 ? (
+                <div className="bottom-margin">
                 The following paths exist in this instance but not the other:
                     <div className="pathDiff">
-                        {pathDiffs}
+                        {pathsOnly.map(path => <div>{path}</div>)}
                     </div>
                 </div>
-            ): null }
+            ): null}
+            {diffContents.length > 0 ? (
+                <div>
+                The following paths resulted in this differing content:
+                    {diffContents.map((content, i) => 
+                        <div>
+                            <div>
+                                Path: {diffContentPaths[i]}
+                            </div>
+                            <div >
+                                Content: 
+                            </div>
+                            <div className="pathDiff">
+                                {content}
+                            </div>
+                         </div>
+                    )}
+                </div>
+            ): null}
         </div>
     )
   
@@ -126,22 +192,34 @@
       <>
         <PageLayout _site={_site}>
             <div className="centered-container">
-                {c_doesContentMatch ? (
+                {c_isEqual ? (
                     <div className="instanceMatch">
-                        Content Matches
+                        Instances are equal
                     </div>
                 ):(
                     <div className="instanceDoesNotMatch">
-                        Content Does Not Match
+                        Instances are not equal
                     </div>
                 )}
 
                 <div className="row">
+                    <div style={{marginBottom: "20px"}}>
+                        <div className="inline-row">
+                            Created Time: {convertUnixTime(c_createdTimestamp)}
+                        </div>
+                        <div className="inline-row">
+                            Is Equal: {`${c_isEqual}`}
+                        </div>
+                        <div className="inline-row">
+                            Does Content Match: {`${c_doesContentMatch}`}
+                        </div>
+                    </div>
+
                     <div className="column">
-                        {formatDiff(c_instance1, c_instance1PathDiffs)}
+                        {formatDiff(c_instance1, c_activities1, c_publishStatus1, c_instance1streams, c_pathsOnlyIn1, c_diffContentPaths, c_diffContents1)}
                     </div>
                     <div className="column">
-                        {formatDiff(c_instance2, c_instance2PathDiffs)}
+                        {formatDiff(c_instance2, c_activities2, c_publishStatus2, c_instance2streams, c_pathsOnlyIn2, c_diffContentPaths, c_diffContents2)}
                     </div>
                 </div>
             </div>
