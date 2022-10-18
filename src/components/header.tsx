@@ -30,7 +30,7 @@ const Header = () => {
     <>
       <div className="centered-container">
         <nav className="py-6 flex items-center justify-between">
-          <div className="text-2xl font-semibold">Instance Variant Checker</div>
+          <a className="text-2xl font-semibold" href="/index">Instance Variant Checker</a>
           <img
             src="https://cdn.fs.brandfolder.com/cache=expiry:604800/deY3VGFpSjC761Abjbfc"
             width="40"

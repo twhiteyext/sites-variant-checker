@@ -23,7 +23,7 @@
         sec = a.getSeconds() < 10 ? '0' + a.getSeconds() : a.getSeconds();
     return `${month} ${date}, ${year}, ${hour}:${min}:${sec}`;
   }  
-  
+
   /**
    * Required when Knowledge Graph data is used for a template.
    */
@@ -73,7 +73,7 @@
    * take on the form: featureName/entityId
    */
   export const getPath: GetPath<TemplateProps> = ({ document }) => {
-    return `instancediffs/${document.id.toString()}`;
+    return `instancediff/${document.id.toString()}`;
   };
   
   /**
