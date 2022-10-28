@@ -40,12 +40,12 @@
         "c_instance1",
         "c_instance2",
         "c_createdTimestamp",
-        "c_activities1",
-        "c_activities2",
+        "c_instance1Activities",
+        "c_instance2Activities",
         "c_publishStatus1",
         "c_publishStatus2",
-        "c_instance1streams",
-        "c_instance2streams",
+        "c_instance1Streams",
+        "c_instance2Streams",
         "c_doesContentMatch",
         "c_pathsOnlyIn1",
         "c_pathsOnlyIn2",
@@ -125,12 +125,12 @@
       c_instance1,
       c_instance2,
       c_createdTimestamp,
-      c_activities1,
-      c_activities2,
+      c_instance1Activities,
+      c_instance2Activities,
       c_publishStatus1,
       c_publishStatus2,
-      c_instance1streams,
-      c_instance2streams,
+      c_instance1Streams,
+      c_instance2Streams,
       c_doesContentMatch,
       c_pathsOnlyIn1,
       c_pathsOnlyIn2,
@@ -140,26 +140,47 @@
       c_isEqual,
     } = document;
 
-    let formatDiff = (instance: String, activities: String, publishStatus: String, streams: String[], pathsOnly: String[], diffContentPaths: String[], diffContents: String[]) => (
+    let formatDiff = (instance: String, activities: any, publishStatus: String, streams: any[], pathsOnly: String[], diffContentPaths: String[], diffContents: String[]) => (
         <div>
             <div className="boldFont">
                 {instance}
             </div>
-            <div>
-                Activities: {activities}
-            </div>
+
             <div className="bottom-margin">
                 PublishStatus: {publishStatus}
             </div>
             <div className="bottom-margin">
-                Streams:
+              {streams != null && streams.length > 0 ? (
+                <div>
                 {streams.map(stream => 
                     <div className="pathDiff">
-                        {stream}
+                        Name: {stream.name}
+                        Stored Doc Count: {stream.storedDocCount}
+                        Initial Task Doc Count: {stream.initialTaskDocCount}
+                        Initial Task Duration: {stream.initialTaskDuration}
+                        Is Archived: {stream.isArchived}
                     </div>
                 )}
+                </div>
+              ): (null)}
             </div>
-            {pathsOnly.length > 0 ? (
+            { activities != null ?(
+              <div>
+                <div>
+                  Diff Delete Activities
+                  {activities.diffDeleteActivities}
+                </div>
+                <div>
+                  Diff Publish Activities
+                  {activities.diffPublishActivities}
+                </div>
+                <div>
+                  Diff Update Activities
+                  {activities.diffUpdateActivities}
+                </div>
+              </div>
+            ):(null)}
+            {pathsOnly != null && pathsOnly.length > 0 ? (
                 <div className="bottom-margin">
                 The following paths exist in this instance but not the other:
                     <div className="pathDiff">
@@ -167,7 +188,7 @@
                     </div>
                 </div>
             ): null}
-            {diffContents.length > 0 ? (
+            {diffContents != null && diffContents.length > 0 ? (
                 <div>
                 The following paths resulted in this differing content:
                     {diffContents.map((content, i) => 
@@ -216,10 +237,10 @@
                     </div>
 
                     <div className="column">
-                        {formatDiff(c_instance1, c_activities1, c_publishStatus1, c_instance1streams, c_pathsOnlyIn1, c_diffContentPaths, c_diffContents1)}
+                        {formatDiff(c_instance1, c_instance1Activities, c_publishStatus1, c_instance1Streams, c_pathsOnlyIn1, c_diffContentPaths, c_diffContents1)}
                     </div>
                     <div className="column">
-                        {formatDiff(c_instance2, c_activities2, c_publishStatus2, c_instance2streams, c_pathsOnlyIn2, c_diffContentPaths, c_diffContents2)}
+                        {formatDiff(c_instance2, c_instance2Activities, c_publishStatus2, c_instance2Streams, c_pathsOnlyIn2, c_diffContentPaths, c_diffContents2)}
                     </div>
                 </div>
             </div>
