@@ -20,7 +20,13 @@
 
 .column {
   float: left;
-  width: 50%;
+  width: 49%;
+}
+
+.columnDivider {
+  float: left;
+  width: 2%;
+  height: 400px;
 }
 
 /* Clear floats after the columns */
@@ -85,4 +91,9 @@
 
 .bottom-margin {
   margin-bottom: 20px
+}
+
+.bigHeader {
+  font-weight: 700;
+  font-size: 25px;
 }

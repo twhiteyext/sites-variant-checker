@@ -50,9 +50,9 @@
         "c_pathsOnlyIn1",
         "c_pathsOnlyIn2",
         "c_diffContentPaths",
-        "c_diffContents1",
-        "c_diffContents2",
-        "c_isEqual",
+        // "c_diffContents1",
+        // "c_diffContents2",
+        "c_isEqual"
       ],
       // Defines the scope of entities that qualify for this stream.
       filter: {
@@ -65,6 +65,13 @@
       },
     },
   };
+
+ interface Activities {
+    /** The entire document returned after applying the stream to a single entity */
+    diffDeleteActivities: string[];
+    diffUpdateActivities: string[];
+    diffPublishActivities: string[];
+}
   
   /**
    * Defines the path that the generated file will live at for production.
@@ -135,13 +142,14 @@
       c_pathsOnlyIn1,
       c_pathsOnlyIn2,
       c_diffContentPaths,
-      c_diffContents1,
-      c_diffContents2,
-      c_isEqual,
+      c_isEqual
     } = document;
 
-    let formatDiff = (instance: String, activities: any, publishStatus: String, streams: any[], pathsOnly: String[], diffContentPaths: String[], diffContents: String[]) => (
+    let formatCogDiff = (instance: String, publishStatus: String, streams: any[]) => (
         <div>
+            <h1 className="bigHeader">
+              Cog Results
+            </h1>
             <div className="boldFont">
                 {instance}
             </div>
@@ -151,63 +159,132 @@
             </div>
             <div className="bottom-margin">
               {streams != null && streams.length > 0 ? (
-                <div>
-                {streams.map(stream => 
-                    <div className="pathDiff">
+                <div className="pathDiff">
+                  <h1 className="boldFont">Streams</h1>
+                  {streams.map(stream => 
+                    <div className="bottom-margin">
+                      <div>
                         Name: {stream.name}
+                      </div>
+                      <div>
                         Stored Doc Count: {stream.storedDocCount}
+                      </div>
+                      <div>
                         Initial Task Doc Count: {stream.initialTaskDocCount}
+                      </div>
+                      <div>
                         Initial Task Duration: {stream.initialTaskDuration}
-                        Is Archived: {stream.isArchived}
+                      </div>
+                      <div>
+                        Is Archived: {stream.isArchived.toString()}
+                      </div>
                     </div>
                 )}
                 </div>
               ): (null)}
             </div>
-            { activities != null ?(
-              <div>
-                <div>
-                  Diff Delete Activities
-                  {activities.diffDeleteActivities}
-                </div>
-                <div>
-                  Diff Publish Activities
-                  {activities.diffPublishActivities}
-                </div>
-                <div>
-                  Diff Update Activities
-                  {activities.diffUpdateActivities}
-                </div>
-              </div>
-            ):(null)}
-            {pathsOnly != null && pathsOnly.length > 0 ? (
-                <div className="bottom-margin">
-                The following paths exist in this instance but not the other:
-                    <div className="pathDiff">
-                        {pathsOnly.map(path => <div>{path}</div>)}
-                    </div>
-                </div>
-            ): null}
-            {diffContents != null && diffContents.length > 0 ? (
-                <div>
-                The following paths resulted in this differing content:
-                    {diffContents.map((content, i) => 
-                        <div>
-                            <div>
-                                Path: {diffContentPaths[i]}
-                            </div>
-                            <div >
-                                Content: 
-                            </div>
-                            <div className="pathDiff">
-                                {content}
-                            </div>
-                         </div>
-                    )}
-                </div>
-            ): null}
         </div>
     )
+
+    let formatCwebDiff = (pathsOnly: String[], diffContentPaths: String[]) => (
+      <div>
+          <h1 className="bigHeader">
+            CWeb Results
+          </h1>
+          {!c_doesContentMatch ? (
+            <h1 className="instanceDoesNotMatch">
+              Content Doesn't Match
+            </h1>
+          ):(null)}
+          {pathsOnly != null && pathsOnly.length > 0 ? (
+              <div className="bottom-margin">
+              The following paths exist in this instance but not the other:
+                  <div className="pathDiff">
+                      {pathsOnly.map(path => <div>{path}</div>)}
+                  </div>
+              </div>
+          ): null}
+          {/* {diffContentPaths != null && diffContentPaths.length > 0 ? (
+              <div>
+              The following paths resulted in this differing content:
+                  {{diffContents.map((content, i) => 
+                      <div>
+                          <div>
+                              Path: {diffContentPaths[i]}
+                          </div>
+                          <div >
+                              Content: 
+                          </div>
+                          <div className="pathDiff">
+                          </div>
+                       </div>
+                  )}
+              </div>
+          ): null} */}
+      </div>
+  )
+
+  let formatActivityDiff = (activities: Activities) => (
+    <div>
+        <h1 className="bigHeader">
+          CogActivityLog Results
+        </h1>
+        { activities != null ?(
+          <div>
+            {activities.diffDeleteActivities != null ? (
+              <div>
+                <div className="boldFont">
+                  Diff Delete Activities
+                </div>
+                <div className="pathDiff">
+                  <div>
+                    {activities.diffDeleteActivities.map(id => <div>{id}</div>)}
+                  </div>
+                </div>
+              </div>
+            ):null}
+
+            {activities.diffUpdateActivities != null ? (
+              <div>
+                <div className="boldFont">
+                  Diff Update Activities
+                </div>
+                <div className="pathDiff">
+                  <div>
+                    {activities.diffUpdateActivities.map(id => <div>{id}</div>)}
+                  </div>
+                </div>
+              </div>
+            ):null}
+
+            
+            {activities.diffPublishActivities != null ? (
+              <div>
+                <div className="boldFont">
+                  Diff Publish Activities
+                </div>
+                <div className="pathDiff">
+                  <div>
+                    {activities.diffPublishActivities.map(id => <div>{id}</div>)}
+                  </div>
+                </div>
+              </div>
+            ):null}
+          </div>
+        ):(null)}
+    </div>
+)
+
+    let sortedStreams1 = c_instance1Streams.sort(function (a: any, b: any) {
+      a = a.name.toLowerCase();
+      b = b.name.toLowerCase();
+      return a < b ? -1 : a> b ? 1: 0;
+    })
+    let sortedStreams2 = c_instance2Streams.sort(function (a: any, b: any) {
+      a = a.name.toLowerCase();
+      b = b.name.toLowerCase();
+      return a < b ? -1 : a> b ? 1: 0;
+    })
   
     return (
       <>
@@ -226,22 +303,40 @@
                 <div className="row">
                     <div style={{marginBottom: "20px"}}>
                         <div className="inline-row">
-                            Created Time: {convertUnixTime(c_createdTimestamp)}
-                        </div>
-                        <div className="inline-row">
-                            Is Equal: {`${c_isEqual}`}
-                        </div>
-                        <div className="inline-row">
-                            Does Content Match: {`${c_doesContentMatch}`}
+                            Deploy Time: {convertUnixTime(c_createdTimestamp)}
                         </div>
                     </div>
 
-                    <div className="column">
-                        {formatDiff(c_instance1, c_instance1Activities, c_publishStatus1, c_instance1Streams, c_pathsOnlyIn1, c_diffContentPaths, c_diffContents1)}
+                    <div>
+                      <div className="column">
+                          {formatCogDiff(c_instance1, c_publishStatus1, sortedStreams1)}
+                      </div>
+                      <div className="columnDivider"/>
+                      <div className="column">
+                          {formatCogDiff(c_instance2, c_publishStatus2, sortedStreams2)}
+                      </div>
                     </div>
-                    <div className="column">
-                        {formatDiff(c_instance2, c_instance2Activities, c_publishStatus2, c_instance2Streams, c_pathsOnlyIn2, c_diffContentPaths, c_diffContents2)}
+
+                    <div>
+                      <div className="column">
+                          {formatCwebDiff(c_pathsOnlyIn1.sort(), c_diffContentPaths.sort())}
+                      </div>
+                      <div className="columnDivider"/>
+                      <div className="column">
+                          {formatCwebDiff(c_pathsOnlyIn2.sort(), c_diffContentPaths.sort())}
+                      </div>
                     </div>
+
+                    <div>
+                      <div className="column">
+                          {formatActivityDiff(c_instance1Activities)}
+                      </div>
+                      <div className="columnDivider"/>
+                      <div className="column">
+                          {formatActivityDiff(c_instance2Activities)}
+                      </div>
+                    </div>
+
                 </div>
             </div>
         </PageLayout>

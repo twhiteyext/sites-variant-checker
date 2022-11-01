@@ -124,6 +124,12 @@
       })
     }
 
+    let sortedChildren = childComponents.sort(function (a: any, b: any) {
+      a = a.timestamp.toLowerCase();
+      b = b.timestamp.toLowerCase();
+      return a < b ? 1 : a> b ? -1: 0;
+    })
+
     var lastRun = convertUnixTime(c_lastRunTimestamp)
   
     return (
