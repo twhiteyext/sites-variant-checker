@@ -80,7 +80,7 @@
    * take on the form: featureName/entityId
    */
   export const getPath: GetPath<TemplateProps> = ({ document }) => {
-    return `instancediff/${document.id.toString()}`;
+    return `${document.name.toString()}`;
   };
   
   /**
@@ -90,7 +90,7 @@
    * a new deploy.
    */
   export const getRedirects: GetRedirects<TemplateProps> = ({ document }) => {
-    return [`index-old/${document.id.toString()}`];
+    return [`index-old/${document.name.toString()}`];
   };
   
   /**
@@ -208,6 +208,8 @@
       </div>
   )
 
+  let parsedInstance = c_instance1.split("-")
+
   let formatContentDiff = (paths: string[]) => (
     <div className="bottom-margin">
     {c_diffContentPaths != null && paths.length > 0 ? (
@@ -216,7 +218,12 @@
           The following paths resulted in differing content:
         </div>
         <div className="pathDiff">
-        {paths.map(path => <div>{path}</div>)}
+        {paths.map(path => 
+          <div>
+              <a href={"https://" + name + "-" + parsedInstance[0] + "-d.preview.pagescdn.com/" + path}>
+                  {path}
+              </a>
+          </div>)}
         </div>
       </div>
       ): null}

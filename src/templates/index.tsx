@@ -141,7 +141,7 @@
               </div>
                 {childComponents.map(child =>
                   <div className={"child-isSame-"+child.isSame}>
-                    <a className="child-inside" style={{fontWeight: '700'}} href={"/instancediff/"+child.id}> {child.deployId} </a>
+                    <a className="child-inside" style={{fontWeight: '700'}} href={"/"+child.deployId}> {child.deployId} </a>
                     <div className="child-inside"> {child.timestamp} </div>
                   </div>
                 )}
