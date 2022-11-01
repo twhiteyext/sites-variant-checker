@@ -204,24 +204,23 @@
                   </div>
               </div>
           ): null}
-          {/* {diffContentPaths != null && diffContentPaths.length > 0 ? (
-              <div>
-              The following paths resulted in this differing content:
-                  {{diffContents.map((content, i) => 
-                      <div>
-                          <div>
-                              Path: {diffContentPaths[i]}
-                          </div>
-                          <div >
-                              Content: 
-                          </div>
-                          <div className="pathDiff">
-                          </div>
-                       </div>
-                  )}
-              </div>
-          ): null} */}
+         
       </div>
+  )
+
+  let formatContentDiff = (paths: string[]) => (
+    <div className="bottom-margin">
+    {c_diffContentPaths != null && paths.length > 0 ? (
+      <div>
+        <div className="boldFont">
+          The following paths resulted in differing content:
+        </div>
+        <div className="pathDiff">
+        {paths.map(path => <div>{path}</div>)}
+        </div>
+      </div>
+      ): null}
+    </div>
   )
 
   let formatActivityDiff = (activities: Activities) => (
@@ -325,6 +324,9 @@
                       <div className="column">
                           {formatCwebDiff(c_pathsOnlyIn1 ? c_pathsOnlyIn2.sort(): [], c_diffContentPaths ? c_diffContentPaths.sort(): [])}
                       </div>
+                    </div>
+                    <div>
+                      {formatContentDiff(c_diffContentPaths)}
                     </div>
 
                     <div>
