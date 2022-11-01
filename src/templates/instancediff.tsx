@@ -275,16 +275,16 @@
     </div>
 )
 
-    let sortedStreams1 = c_instance1Streams.sort(function (a: any, b: any) {
+    let sortedStreams1 = c_instance1Streams != null ? c_instance1Streams.sort(function (a: any, b: any) {
       a = a.name.toLowerCase();
       b = b.name.toLowerCase();
       return a < b ? -1 : a> b ? 1: 0;
-    })
-    let sortedStreams2 = c_instance2Streams.sort(function (a: any, b: any) {
+    }): []
+    let sortedStreams2 = c_instance2Streams != null ? c_instance2Streams.sort(function (a: any, b: any) {
       a = a.name.toLowerCase();
       b = b.name.toLowerCase();
       return a < b ? -1 : a> b ? 1: 0;
-    })
+    }) : []
   
     return (
       <>
@@ -319,11 +319,11 @@
 
                     <div>
                       <div className="column">
-                          {formatCwebDiff(c_pathsOnlyIn1.sort(), c_diffContentPaths.sort())}
+                          {formatCwebDiff(c_pathsOnlyIn1 != null ? c_pathsOnlyIn1.sort(): [], c_diffContentPaths != null ? c_diffContentPaths.sort(): [])}
                       </div>
                       <div className="columnDivider"/>
                       <div className="column">
-                          {formatCwebDiff(c_pathsOnlyIn2.sort(), c_diffContentPaths.sort())}
+                          {formatCwebDiff(c_pathsOnlyIn1 ? c_pathsOnlyIn2.sort(): [], c_diffContentPaths ? c_diffContentPaths.sort(): [])}
                       </div>
                     </div>
 
