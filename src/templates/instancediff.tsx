@@ -200,7 +200,11 @@
               <div className="bottom-margin">
               The following paths exist in this instance but not the other:
                   <div className="pathDiff">
-                      {pathsOnly.map(path => <div>{path}</div>)}
+                      {pathsOnly.map(path => <div>
+                        <a href={"https://" + name + "-" + parsedInstance[0] + "-d.preview.pagescdn.com/" + path}>
+                          {path}
+                        </a>
+                      </div>)}
                   </div>
               </div>
           ): null}
