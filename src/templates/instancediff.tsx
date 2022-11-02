@@ -56,7 +56,7 @@
       ],
       // Defines the scope of entities that qualify for this stream.
       filter: {
-        entityIds: ["8168484327072662130"],
+        entityTypes: ["ce_instanceDiff"],
       },
       // The entity language profiles that documents will be generated for.
       localization: {
