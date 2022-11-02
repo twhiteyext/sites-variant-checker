@@ -26,7 +26,7 @@
 .columnDivider {
   float: left;
   width: 2%;
-  height: 400px;
+  height: 2px;
 }
 
 /* Clear floats after the columns */
@@ -82,6 +82,8 @@
 
 .child-inside {
   margin: 0px 25px;
+  width: 20%;
+  display: inline-block;
 }
 
 .inline-row {
@@ -96,4 +98,23 @@
 .bigHeader {
   font-weight: 700;
   font-size: 25px;
+}
+
+.right {
+  float: right;
+}
+
+.inline {
+  display: inline-block; 
+  margin-left: 10px;
+}
+
+.radioButton {
+  background-color: rgb(224 224 224 / 56%);
+  border-radius: 4px;
+  padding: 5px 20px;
+}
+
+.gridColumn {
+  width: 20%;
 }

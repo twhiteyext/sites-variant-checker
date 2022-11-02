@@ -186,7 +186,9 @@
         </div>
     )
 
-    let formatCwebDiff = (pathsOnly: String[], diffContentPaths: String[]) => (
+    let parsedInstance = c_instance1.split("-")
+
+    let formatCwebDiff = (pathsOnly: String[], diffContentPaths: String[], variant: string) => (
       <div>
           <h1 className="bigHeader">
             CWeb Results
@@ -195,43 +197,41 @@
             <h1 className="instanceDoesNotMatch">
               Content Doesn't Match
             </h1>
-          ):(null)}
+          ):(            
+            <h1 className="instanceMatches">
+              Content Matches
+            </h1>
+          )}
           {pathsOnly != null && pathsOnly.length > 0 ? (
               <div className="bottom-margin">
               The following paths exist in this instance but not the other:
                   <div className="pathDiff">
                       {pathsOnly.map(path => <div>
-                        <a href={"https://" + name + "-" + parsedInstance[0] + "-d.preview.pagescdn.com/" + path}>
+                        <a href={"https://" + name + "-" + parsedInstance[0] + + "-" + variant + "-d.preview.pagescdn.com/" + path}>
                           {path}
                         </a>
                       </div>)}
                   </div>
               </div>
           ): null}
-         
+              <div className="bottom-margin">
+          {diffContentPaths != null && diffContentPaths.length > 0 ? (
+            <div>
+              <div className="boldFont">
+                The following paths resulted in differing content:
+              </div>
+              <div className="pathDiff">
+              {diffContentPaths.map(path => 
+                <div>
+                    <a href={"https://" + name + "-" + parsedInstance[0] + "-" + variant + "-d.preview.pagescdn.com/" + path}>
+                        {path}
+                    </a>
+                </div>)}
+              </div>
+            </div>
+            ): null}
+          </div>
       </div>
-  )
-
-  let parsedInstance = c_instance1.split("-")
-
-  let formatContentDiff = (paths: string[]) => (
-    <div className="bottom-margin">
-    {c_diffContentPaths != null && paths.length > 0 ? (
-      <div>
-        <div className="boldFont">
-          The following paths resulted in differing content:
-        </div>
-        <div className="pathDiff">
-        {paths.map(path => 
-          <div>
-              <a href={"https://" + name + "-" + parsedInstance[0] + "-d.preview.pagescdn.com/" + path}>
-                  {path}
-              </a>
-          </div>)}
-        </div>
-      </div>
-      ): null}
-    </div>
   )
 
   let formatActivityDiff = (activities: Activities) => (
@@ -239,6 +239,15 @@
         <h1 className="bigHeader">
           CogActivityLog Results
         </h1>
+        {activities == null || (activities.diffDeleteActivities.length === 0 && activities.diffUpdateActivities.length === 0 && activities.diffPublishActivities.length === 0) ? (
+          <h1 className="instanceMatches">
+            Activities Match
+          </h1>     
+        ):(
+          <h1 className="instanceDoesNotMatch">
+            Activities Don't Match
+          </h1>
+        )}
         { activities != null ?(
           <div>
             {activities.diffDeleteActivities != null ? (
@@ -301,7 +310,7 @@
         <PageLayout _site={_site}>
             <div className="centered-container">
                 {c_isEqual ? (
-                    <div className="instanceMatch">
+                    <div className="instanceMatches">
                         Instances are equal
                     </div>
                 ):(
@@ -329,15 +338,12 @@
 
                     <div>
                       <div className="column">
-                          {formatCwebDiff(c_pathsOnlyIn1 != null ? c_pathsOnlyIn1.sort(): [], c_diffContentPaths != null ? c_diffContentPaths.sort(): [])}
+                          {formatCwebDiff(c_pathsOnlyIn1 != null ? c_pathsOnlyIn1.sort(): [], c_diffContentPaths != null ? c_diffContentPaths.sort(): [], "pgs2020v1")}
                       </div>
                       <div className="columnDivider"/>
                       <div className="column">
-                          {formatCwebDiff(c_pathsOnlyIn1 ? c_pathsOnlyIn2.sort(): [], c_diffContentPaths ? c_diffContentPaths.sort(): [])}
+                          {formatCwebDiff(c_pathsOnlyIn2 != null ? c_pathsOnlyIn2.sort(): [], c_diffContentPaths != null ? c_diffContentPaths.sort(): [], "pgs2022v2")}
                       </div>
-                    </div>
-                    <div>
-                      {formatContentDiff(c_diffContentPaths)}
                     </div>
 
                     <div>

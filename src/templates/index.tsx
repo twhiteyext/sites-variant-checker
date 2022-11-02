@@ -90,7 +90,31 @@
         sec = a.getSeconds() < 10 ? '0' + a.getSeconds() : a.getSeconds();
     return `${month} ${date}, ${year}, ${hour}:${min}:${sec}`;
   }  
-  
+
+  let sortChildrenByTimestamp = (childComponents: any[]) => {
+    return childComponents.sort(function (a: any, b: any) {
+    a = a.timestamp.toLowerCase();
+    b = b.timestamp.toLowerCase();
+    return a < b ? 1 : a> b ? -1: 0;
+    })
+  }
+
+  let sortChildrenBySiteId = (childComponents: any[]) => {
+    return childComponents.sort(function (a: any, b: any) {
+    a = a.siteId.toLowerCase();
+    b = b.siteId.toLowerCase();
+    return a < b ? 1 : a> b ? -1: 0;
+    }) 
+  }
+
+  let sortChildrenByAccountId = (childComponents: any[]) => {
+    return childComponents.sort(function (a: any, b: any) {
+    a = a.accountId.toLowerCase();
+    b = b.accountId.toLowerCase();
+    return a < b ? 1 : a> b ? -1: 0;
+    })
+  }
+
   /**
    * This is the main template. It can have any name as long as it's the default export.
    * The props passed in here are the direct stream document defined by `config`.
@@ -100,7 +124,7 @@
    * components any way you'd like as long as it lives in the src folder (though you should not put
    * them in the src/templates folder as this is specific for true template files).
    */
-  const InstanceDiff: Template<TemplateRenderProps> = ({
+  const Index: Template<TemplateRenderProps> = ({
     relativePrefixToRoot,
     path,
     document,
@@ -112,44 +136,71 @@
       c_children
     } = document;
 
-    let childComponents = []
-    for (var i = 0; i < c_children.length; i++) {
-      var child = c_children[i]
+    let childComponents = [];
+    let splitChildren = c_children.split(',')
+    for (var i = 0; i < splitChildren.length; i++) {
+      var child = splitChildren[i]
       var parts = child.split(":")
       childComponents.push({
         timestamp: convertUnixTime(parts[0]),
         deployId: parts[1],
-        id: parts[2],
-        isSame: parts[3],
+        siteId: parts[2],
+        accountId: parts[3],
+        isSame: parts[4],
       })
     }
 
-    let sortedChildren = childComponents.sort(function (a: any, b: any) {
-      a = a.timestamp.toLowerCase();
-      b = b.timestamp.toLowerCase();
-      return a < b ? 1 : a> b ? -1: 0;
-    })
-
     var lastRun = convertUnixTime(c_lastRunTimestamp)
+    const [renderChildren, setRenderChildren] = React.useState(sortChildrenByTimestamp(childComponents));
   
     return (
       <>
         <PageLayout _site={_site}>
             <div className="centered-container">
-              <div>
-                Last Run: {lastRun}
+              <div className="margin-bottom">
+                <div className="column">
+                  Last Run: {lastRun}
+                </div>
+                <div className="column">
+                  <div className="right">
+                    <h1 className="inline">
+                      Sort by:
+                    </h1>
+                    <div className="inline" >
+
+                      <button className="radioButton" name="siteId" onClick={()=>{setRenderChildren(sortChildrenBySiteId(JSON.parse(JSON.stringify(childComponents))))}}>SiteId</button>
+                    </div>
+                    <div className="inline" >
+                      <button className="radioButton" name="accountId" onClick={()=>{setRenderChildren(sortChildrenByAccountId(JSON.parse(JSON.stringify(childComponents))))}}>AccountId</button>
+                    </div>
+                    <div className="inline" >
+                      <button className="radioButton" onClick={()=>{setRenderChildren(sortChildrenByTimestamp(JSON.parse(JSON.stringify(childComponents))))}}>Most Recent</button>
+                    </div>
+                  </div>
+                </div>
               </div>
-                {childComponents.map(child =>
-                  <div className={"child-isSame-"+child.isSame}>
+              <br/>
+              <div style={{marginTop: '40px'}}>
+                <div className="child-inside"> DeployId </div>
+                <div className="child-inside"> SiteId </div>
+                <div className="child-inside"> AccountId </div>
+                <div className="child-inside"> Timestamp </div>
+              </div>
+              <div>
+                {renderChildren.map((child, i) =>
+                  <div className={"child-isSame-"+child.isSame} key={"child"+i}>
                     <a className="child-inside" style={{fontWeight: '700'}} href={"/"+child.deployId}> {child.deployId} </a>
+                    <div className="child-inside"> {child.siteId} </div>
+                    <div className="child-inside"> {child.accountId} </div>
                     <div className="child-inside"> {child.timestamp} </div>
                   </div>
                 )}
+              </div>
+
             </div>
         </PageLayout>
       </>
     );
   };
   
-  export default InstanceDiff;
-  
+  export default Index;
