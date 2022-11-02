@@ -56,7 +56,7 @@
       ],
       // Defines the scope of entities that qualify for this stream.
       filter: {
-        entityTypes: ["ce_instanceDiff"],
+        entityIds: ["8168484327072662130"],
       },
       // The entity language profiles that documents will be generated for.
       localization: {
@@ -239,7 +239,7 @@
         <h1 className="bigHeader">
           CogActivityLog Results
         </h1>
-        {activities == null || ((activities.diffDeleteActivities === null || activities.diffDeleteActivities.length === 0) && (activities.diffUpdateActivities === null || activities.diffUpdateActivities.length === 0) && (activities.diffPublishActivities === null || activities.diffPublishActivities.length === 0)) ? (
+        {activities == null || (activities.diffDeleteActivities === null  && activities.diffUpdateActivities === null && activities.diffPublishActivities === null) ? (
           <h1 className="instanceMatches">
             Activities Match
           </h1>     
@@ -276,7 +276,6 @@
               </div>
             ):null}
 
-            
             {activities.diffPublishActivities != null ? (
               <div>
                 <div className="boldFont">
