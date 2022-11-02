@@ -239,7 +239,7 @@
         <h1 className="bigHeader">
           CogActivityLog Results
         </h1>
-        {activities == null || (activities.diffDeleteActivities.length === 0 && activities.diffUpdateActivities.length === 0 && activities.diffPublishActivities.length === 0) ? (
+        {activities == null || ((activities.diffDeleteActivities === null || activities.diffDeleteActivities.length === 0) && (activities.diffUpdateActivities === null || activities.diffUpdateActivities.length === 0) && (activities.diffPublishActivities === null || activities.diffPublishActivities.length === 0)) ? (
           <h1 className="instanceMatches">
             Activities Match
           </h1>     
