@@ -93,8 +93,8 @@
 
   let sortChildrenByTimestamp = (childComponents: any[]) => {
     return childComponents.sort(function (a: any, b: any) {
-    a = a.timestamp.toLowerCase();
-    b = b.timestamp.toLowerCase();
+    a = a.unix;
+    b = b.unix;
     return a < b ? 1 : a> b ? -1: 0;
     })
   }
@@ -147,6 +147,7 @@
         siteId: parts[2],
         accountId: parts[3],
         isSame: parts[4],
+        unix: parseInt(parts[0])
       })
     }
 
