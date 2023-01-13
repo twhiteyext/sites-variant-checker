@@ -29,7 +29,7 @@
    */
   export const config: TemplateConfig = {
     stream: {
-      $id: "instancediff-stream",
+      $id: "instancediff-stream-1",
       // Specifies the exact data that each generated document will contain. This data is passed in
       // directly as props to the default exported function.
       fields: [
